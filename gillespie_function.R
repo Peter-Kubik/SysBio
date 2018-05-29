@@ -91,10 +91,10 @@ gillespie <- function(x1, x2, iteration, lambda1, beta1,
   R_plus_2 <- lambda2 * x1_average
   R_minus_2 <- beta2 * x2_average
   
-  relative_R1_diff <- abs(R_plus_1-R_minus_1)/mean(c(R_plus_1, R_minus_1))
-  relative_R2_diff <- abs(R_plus_2-R_minus_2)/mean(c(R_plus_2, R_minus_2))
+  relative_R1_diff <- R_plus_1/R_minus_1
+  relative_R2_diff <- R_plus_2/R_minus_2
   
-  indi <- (relative_R1_diff && relative_R2_diff<0.01)
+  indi <- (relative_R1_diff>=0.99 && relative_R1_diff<=1.01 && relative_R2_diff >= 0.99 && relative_R2_diff<=1.01)
   
   
   #Output result
