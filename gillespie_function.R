@@ -311,7 +311,7 @@ dev.off()
 #########################
 ######### 2E ############
 #########################
-parameters2E <- createParameters(900,1000,1000,2000,100,200,20,50, number=5)
+parameters2E <- createParameters(900,1000,1000,2000,10,200,20,50, number=5)
 x1_birth_fun <- function(x){(800)/(800+x)}
 #x1_birth_fun <- function(x){1}
 system.time(all_parm_result_2E <- mclapply(parameters2E,function(x){
@@ -330,3 +330,37 @@ all_parm_result_2E$`4`$means
 lapply(stationary_reached2E,function(x))
 
 tail(all_parm_result_2E$`3`$result)
+
+       
+#########################
+######### 2F ############
+#########################
+all_means <- do.call(rbind,lapply(all_parm_result_2E, function(x)x$means))[,2]
+all_eta <- check_accuracy(all_parm_result_2E)
+plot(all_eta[[1]][,3],1/all_means,asp=1,pch=19)
+all_R <- sapply(all_parm_result_2E,function(x)x$R)
+pdf("/data/subliminal/group_pady/RvsR.pdf",width=10,height=5)
+par(mfrow=c(1,2))
+plot(all_R[1,],all_R[2,],xlab="R+(x1)",ylab="R-(x1)",pch=19)
+lines(-10000:10000,-10000:10000)
+plot(all_R[3,],all_R[4,],xlab="R+(x2)",ylab="R-(x2)",pch=19)
+lines(-10000:10000,-10000:10000)
+dev.off()
+all_parm_result_2E$`1`$means
+pdf("/data/subliminal/group_pady/noise_2F.pdf",width=5,height=5)
+plot(check_accuracy(all_parm_result_2E)[[1]][,3],1/all_means,
+     asp=1,pch=19, ylab="theoretical noise",xlab="observed noise")
+dev.off()
+
+                
+#########################
+######### 2G ############
+#########################
+pdf("/data/subliminal/group_pady/eta_2G.pdf",width=5,height=5)
+plot((all_eta[[1]]$eta22*all_mean[,2])^(1/2),
+     (all_eta[[1]]$eta11*all_mean[,2])^(1/2),
+     ylim=c(4,16),xlim=c(0,7),pch=19,
+     xlab="sqrt(eta11<x2>)",ylab="sqrt(eta22<x2>)")
+dev.off()
+
+all_mean <- t(sapply(all_parm_result_2E, function(x)x$means))
